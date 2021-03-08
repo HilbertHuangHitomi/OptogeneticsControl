@@ -1,0 +1,2 @@
+cd C:\Users\dell\anaconda3\OptogeneticsControl\code
+python RUN.py

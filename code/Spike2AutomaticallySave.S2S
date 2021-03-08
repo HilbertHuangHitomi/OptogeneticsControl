@@ -1,0 +1,11 @@
+while 1 do
+FileNew(0, 1);
+SampleStart(0);
+Yield(4.1, 256);
+SampleStop();
+ExportChanList(1);
+ExportChanList(0, 4.1, 2);
+ExportRectFormat(500, 0);
+FileSaveAs("C:\\Users\\dell\\anaconda3\\OptogeneticsControl\\spike2data\\record\\ele_data.txt",1,1);
+FileClose(0, -1);
+wend
