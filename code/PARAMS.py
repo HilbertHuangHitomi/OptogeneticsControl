@@ -6,8 +6,8 @@ Created on Tue Nov  3 13:19:37 2020
 """
 
 hyperparameters = {
-    'path':             'H:\\Projects\\OptogeneticsControl\\',
-    'subject':          'ICR20210113-7',
+    'path':             'C:\\Users\\dell\\anaconda3\\OptogeneticsControl\\',
+    'subject':          '20210222-8',
     'train_flag':       False,
     'sample_size':      2048,
     'duration':         2048,
@@ -15,7 +15,7 @@ hyperparameters = {
     'record_days':      5,
     'threshold':        0.5,
     'waiting_times':    [0.5,0.5,0.5],
-    'ema':              0.,
+    'ema':              0.5,
     'weights':          [1,1,1]}
 
 '''

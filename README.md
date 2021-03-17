@@ -149,5 +149,8 @@ made by Yicong Huang, SCUT.
 - redesign FeatureCalculate with pyentrp.
 - redesign models.
 
+### 2021.03.17 update
+- fix bugs in FeatureCalculate.
+
 ## immediate exsisting issues
-- speed of reading data.
+- speed of reading and processing large scale data.

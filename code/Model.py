@@ -113,15 +113,15 @@ def FeatureCalculate(trace):
         for i in range(len(dwt_data)):
             V[i] = np.std(dwt_data[i])
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2))))
+        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
-    # feature : subband maximum value
+    # feature : subband maximum value distribution & entropy
     def MaximumValue(dwt_data):
         V = np.zeros(len(dwt_data))
         for i in range(len(dwt_data)):
             V[i] = np.max(dwt_data[i])
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2))))
+        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
     # feature : subband relative wavelet energy distribution & entropy
     def RelativeEnergy(dwt_data):
@@ -129,7 +129,7 @@ def FeatureCalculate(trace):
         for i in range(len(dwt_data)):
             V[i] = np.sum(dwt_data[i]**2)
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2))))
+        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
     # feature : subband Shanon entropy distribution & entropy
     def ShanonEntropy(dwt_data):
@@ -137,7 +137,7 @@ def FeatureCalculate(trace):
         for i in range(len(dwt_data)):
             V[i] = entropy.shannon_entropy(dwt_data[i])
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2))))
+        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
     # feature : subband permutation entropy distribution & entropy
     def PermutationEntropy(dwt_data):
@@ -145,7 +145,7 @@ def FeatureCalculate(trace):
         for i in range(len(dwt_data)):
             V[i] = entropy.permutation_entropy(dwt_data[i],normalize=True)
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2))))
+        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
     # calculate feature
     dwt_data = pywt.wavedec(trace, 'db4', level=6)
@@ -360,11 +360,8 @@ def TestModel():
 
 
 #%%
-
-if __name__== '__main__':
-
     #train_model()
-    TestModel()
+    #TestModel()
 
 
 
