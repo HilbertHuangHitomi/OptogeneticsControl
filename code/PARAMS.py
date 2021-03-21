@@ -14,7 +14,7 @@ hyperparameters = {
     'sampling_rate':    500,
     'record_days':      5,
     'threshold':        0.5,
-    'waiting_times':    [0.5,0.5,0.5],
+    'waiting_times':    [0.25,0.50,0.60,0.70],
     'ema':              0.5,
     'weights':          [1,1,1]}
 

@@ -11,7 +11,6 @@ sys.path.append('C:\\Users\\dell\\anaconda3\\OptogeneticsControl\\code\\')
 
 import numpy as np
 import pywt
-import scipy
 import matplotlib.pyplot as plt
 import gc
 import os
@@ -20,7 +19,7 @@ from prettytable import PrettyTable
 from tqdm import tqdm
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import BorderlineSMOTE
 from pyentrp import entropy
 from PARAMS import hyperparameters
 
@@ -28,7 +27,7 @@ from PARAMS import hyperparameters
 #%%
 
 # read data and sample
-def DatasetGenerate(split=[7,1], ratio=[4,1]):
+def DatasetGenerate(split=[7,1], ratio=[16,1]):
 
     sbj = hyperparameters['subject']
     path = hyperparameters['path'] + 'TrainData\\' + hyperparameters['subject'] + '\\'
@@ -58,7 +57,7 @@ def DatasetGenerate(split=[7,1], ratio=[4,1]):
         return samples
 
     def OverSampling(normal,seizure):
-        over_sampler = SMOTE()
+        over_sampler = BorderlineSMOTE()
         resample_data, _ = over_sampler.fit_resample(
             np.concatenate((normal, seizure)),
             np.concatenate((np.array([0]*len(normal[:,0])), np.array([1]*len(seizure[:,0])))))
@@ -107,52 +106,39 @@ def DatasetGenerate(split=[7,1], ratio=[4,1]):
 
 # feature process
 def FeatureCalculate(trace):
-    # feature : subband standard variance distribution & entropy
+    # feature : subband standard variance distribution
     def StandardVariance(dwt_data):
         V = np.zeros(len(dwt_data))
         for i in range(len(dwt_data)):
             V[i] = np.std(dwt_data[i])
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
-    # feature : subband maximum value distribution & entropy
+    # feature : subband maximum value distribution
     def MaximumValue(dwt_data):
         V = np.zeros(len(dwt_data))
         for i in range(len(dwt_data)):
             V[i] = np.max(dwt_data[i])
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
-    # feature : subband relative wavelet energy distribution & entropy
+    # feature : subband relative wavelet energy distribution
     def RelativeEnergy(dwt_data):
         V = np.zeros(len(dwt_data))
         for i in range(len(dwt_data)):
             V[i] = np.sum(dwt_data[i]**2)
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
-    # feature : subband Shanon entropy distribution & entropy
-    def ShanonEntropy(dwt_data):
-        V = np.zeros(len(dwt_data))
-        for i in range(len(dwt_data)):
-            V[i] = entropy.shannon_entropy(dwt_data[i])
-        V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
-        return V
-    # feature : subband permutation entropy distribution & entropy
+    # feature : subband permutation entropy distribution
     def PermutationEntropy(dwt_data):
         V = np.zeros(len(dwt_data))
         for i in range(len(dwt_data)):
             V[i] = entropy.permutation_entropy(dwt_data[i],normalize=True)
         V = V / np.sum(V)
-        V = np.concatenate((V,np.array(scipy.stats.entropy(pk=V, base=2)).reshape(-1)))
         return V
     # calculate feature
-    dwt_data = pywt.wavedec(trace, 'db4', level=6)
+    dwt_data = pywt.wavedec(trace, 'db4', level=7)
     x = np.concatenate((StandardVariance(dwt_data),
                         MaximumValue(dwt_data),
                         RelativeEnergy(dwt_data),
-                        ShanonEntropy(dwt_data),
                         PermutationEntropy(dwt_data)))
     return x
 
@@ -360,8 +346,8 @@ def TestModel():
 
 
 #%%
-    #train_model()
-    #TestModel()
+# train_model()
+# TestModel()
 
 
 

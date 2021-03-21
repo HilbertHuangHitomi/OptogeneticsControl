@@ -152,5 +152,9 @@ made by Yicong Huang, SCUT.
 ### 2021.03.17 update
 - fix bugs in FeatureCalculate.
 
+### 2021.03.21 update
+- delete shannon entropy as direct features.
+- adjust parameters.
+
 ## immediate exsisting issues
 - speed of reading and processing large scale data.
