@@ -165,23 +165,6 @@ class INPERdeviceControl:
         self.inper_dev.close()
 
 
-'''
-def RunDevice(INPERparameters):
-    I = INPERdeviceControl(INPERparameters)
-    I.InitiateDevice()
-    I.InitiateCommand()
-    I.SendCommand('stop')
-    time.sleep(0.05)
-    I.SendCommand('setting')
-    time.sleep(0.05)
-    I.SendCommand('start')
-    time.sleep(20)
-    I.SendCommand('stop')
-    time.sleep(0.5)
-    I.CloseDevice()
-'''
-
-
 # firing judgement
 def IFfire(state, inper_count):
 

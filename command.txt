@@ -1,7 +1,13 @@
-…or create a new repository on the command line
+cd C:\Users\dell\anaconda3\OptogeneticsControl
+python RUN.py
+
+
+python ~/Projects/OptogeneticsControl/Model.py
+
+
 git init
 git add .
-git commit -m "0"
+git commit -m "new"
 git branch -M main
 git remote add origin git@github.com:HilbertHuangHitomi/OptogeneticsControl.git
 git push -u origin main

@@ -6,6 +6,7 @@ Created on Mon Oct 26 13:17:40 2020
 """
 
 
+import os
 import win32file
 import win32con
 from PARAMS import hyperparameters
@@ -13,9 +14,8 @@ from PARAMS import hyperparameters
 
 # give the watch path
 def WatchPath():
-    path = hyperparameters['path']
     FILE_LIST_DIRECTORY = win32con.GENERIC_READ | win32con.GENERIC_WRITE
-    path_to_watch = path + 'spike2data\\record'
+    path_to_watch = os.path.join(hyperparameters['path'], 'spike2data', 'record')
     hDir = win32file.CreateFile (
       path_to_watch,
       FILE_LIST_DIRECTORY,

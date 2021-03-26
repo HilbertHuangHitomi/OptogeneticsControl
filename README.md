@@ -156,5 +156,18 @@ made by Yicong Huang, SCUT.
 - delete shannon entropy as direct features.
 - adjust parameters.
 
+### 2021.03.25 ReBurn
+- use inception in pytorch instead of traditional ML.
+- improve associated interface.
+- add use os to specify paths.
+- add training support for linux server.
+- adjust file structure.
+- compute sample_size automatically.
+- adjust parameters.
+
+### 2021.03.26 update
+- fix issues working on cpu.
+
 ## immediate exsisting issues
+- bad test performance.
 - speed of reading and processing large scale data.

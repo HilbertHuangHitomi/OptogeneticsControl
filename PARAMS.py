@@ -5,25 +5,43 @@ Created on Tue Nov  3 13:19:37 2020
 @author: Hilbert Huang Hitomi
 """
 
+
+import os
+
+
 hyperparameters = {
-    'path':             'C:\\Users\\dell\\anaconda3\\OptogeneticsControl\\',
-    'subject':          '20210222-8',
-    'train_flag':       False,
-    'sample_size':      2048,
+
+    'path':             os.path.dirname(os.path.abspath(__file__)),
+    'subject':          'ICR20210222-8',
+
+    'train_new_model':  True,
+    'split':            [7,1],
     'duration':         2048,
+    'batch_size':       64,
+    'lr':               1e-3,
+    'epochs':           16,
+    'focal_gamma':      8,
+    'gamma':            1e-1,
+    'weight_decay':     1e-3,
+    'working_device':   'cpu',
+
     'sampling_rate':    500,
     'record_days':      5,
-    'threshold':        0.5,
-    'waiting_times':    [0.25,0.50,0.60,0.70],
-    'ema':              0.5,
-    'weights':          [1,1,1]}
+    'waiting_times':    [0.50,0.50],
+    'ema':              0.
+
+    }
+
 
 '''
-'path':             'H:\\Projects\\OptogeneticsControl\\',
+'path':             '~/hilberthitomi05/Projects/OptogeneticsControl/',
+'path':             'H:/Projects/OptogeneticsControl/',
 'path':             'C:\\Users\\dell\\anaconda3\\OptogeneticsControl\\',
 '''
 
+
 INPERparameters = {
+
     'firing_duration':  4,          # terms
     'channel':          '1',        # channel
     'd_cycle':          0.05,       # duty_cycle, ratio
@@ -33,4 +51,6 @@ INPERparameters = {
     'burst_len':        50,         # seconds
     'burst_int':        10,         # seconds
     'sweep_len':        2000,       # seconds
-    'sweep_int':        20}         # seconds
+    'sweep_int':        20         # seconds
+
+    }

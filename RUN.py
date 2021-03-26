@@ -19,9 +19,8 @@ if __name__== '__main__':
     # watch dog
     hDir = WatchDog.WatchPath()
 
-    # train & load MLP
-    models = Model.train_model()
-    models = Model.LoadModel()
+    # load model
+    model = Model.LoadModel()
 
     # initialization
     ema_proba = 0
@@ -46,7 +45,7 @@ if __name__== '__main__':
             runtime += 1
 
             WatchDog.Watching(hDir)
-            inputdata, seizure_proba = DataIO.QueryPredict(models)
+            inputdata, seizure_proba = DataIO.QueryPredict(model)
             ema_proba = Model.EmaPredict(ema_proba, seizure_proba)
             print(time.strftime("%Y-%m-%d %H:%M:%S - ", time.localtime()) + '{:.2%}'.format(ema_proba) + '\n')
 
