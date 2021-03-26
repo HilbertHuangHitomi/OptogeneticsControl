@@ -479,7 +479,7 @@ def TestModel():
         plt.show()
 
     files = os.listdir(os.path.join(hyperparameters['path'], 'TrainData', hyperparameters['subject'], 'test'))
-    files = sort(files)
+    files.sort()
 
     model = LoadModel()
     model.to(torch.device("cpu"))

@@ -14,7 +14,7 @@ hyperparameters = {
     'path':             os.path.dirname(os.path.abspath(__file__)),
     'subject':          'ICR20210222-8',
 
-    'train_new_model':  True,
+    'train_new_model':  False,
     'split':            [7,1],
     'duration':         2048,
     'batch_size':       64,
@@ -27,7 +27,7 @@ hyperparameters = {
 
     'sampling_rate':    500,
     'record_days':      5,
-    'waiting_times':    [0.50,0.50],
+    'waiting_times':    [0.30,0.40],
     'ema':              0.
 
     }
