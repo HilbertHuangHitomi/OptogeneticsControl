@@ -12,23 +12,24 @@ import os
 hyperparameters = {
 
     'path':             os.path.dirname(os.path.abspath(__file__)),
-    'subject':          'ICR20210222-8',
+    'subject':          'ICR20210222-7',
 
-    'train_new_model':  False,
+    'train_new_model':  True,
     'split':            [7,1],
     'duration':         2048,
     'batch_size':       64,
     'lr':               1e-3,
     'epochs':           16,
-    'focal_gamma':      8,
-    'gamma':            1e-1,
+    'focal_gamma':      4,
+    'focal_alpha':      0.01,
+    'gamma':            5e-1,
     'weight_decay':     1e-3,
     'working_device':   'cpu',
 
     'sampling_rate':    500,
     'record_days':      5,
-    'waiting_times':    [0.30,0.40],
-    'ema':              0.
+    'waiting_times':    [0.50,0.50],
+    'ema':              0.25
 
     }
 

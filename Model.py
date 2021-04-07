@@ -157,7 +157,6 @@ def ProcessData(raw_normal, raw_seizure):
     seizure = Sampling(raw_seizure)
 
     normal,seizure = OverSampling(normal,seizure)
-    #seizure = np.tile(seizure, (int(normal.shape[0]/seizure.shape[0]),1))
 
     train_normal, test_normal = Splitting(normal)
     train_seizure, test_seizure = Splitting(seizure)
@@ -296,7 +295,10 @@ class SRSmodel(nn.Module):
 
 # loss function
 class FocalLoss(nn.Module):
-    def __init__(self, gamma=hyperparameters['focal_gamma'], alpha=0.5):
+    def __init__(self,
+                 gamma = hyperparameters['focal_gamma'],
+                 alpha = hyperparameters['focal_alpha'],
+                 ):
         super(FocalLoss, self).__init__()
         self.gamma = gamma
         self.alpha = alpha
@@ -543,3 +545,4 @@ if __name__== '__main__':
     main()
 
     TestModel()
+
