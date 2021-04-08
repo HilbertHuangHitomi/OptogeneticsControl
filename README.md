@@ -168,6 +168,10 @@ made by Yicong Huang, SCUT.
 ### 2021.03.26 update
 - fix issues working on cpu.
 
+### 2021.04.08 update
+- adjust parameters.
+- fix bugs in the loss function.
+
 ## immediate exsisting issues
 - bad test performance.
 - speed of reading and processing large scale data.

@@ -19,17 +19,17 @@ hyperparameters = {
     'duration':         2048,
     'batch_size':       64,
     'lr':               1e-3,
-    'epochs':           16,
+    'epochs':           32,
     'focal_gamma':      4,
-    'focal_alpha':      0.01,
+    'focal_alpha':      0.1,
     'gamma':            5e-1,
-    'weight_decay':     1e-3,
+    'weight_decay':     1e-2,
     'working_device':   'cpu',
 
     'sampling_rate':    500,
     'record_days':      5,
     'waiting_times':    [0.50,0.50],
-    'ema':              0.25
+    'ema':              0.
 
     }
 
