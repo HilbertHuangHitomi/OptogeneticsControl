@@ -17,7 +17,7 @@ hyperparameters = {
     'train_new_model':  True,
     'split':            [7,1],
     'duration':         2048,
-    'batch_size':       64,
+    'batch_size':       128,
     'lr':               1e-3,
     'epochs':           32,
     'focal_gamma':      4,

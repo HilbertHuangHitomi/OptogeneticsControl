@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 import gc
 import os
 import pywt
+import pandas as pd
 from prettytable import PrettyTable
 from tqdm import tqdm
-from sklearn import preprocessing
 from sklearn.metrics import roc_auc_score
 from imblearn.over_sampling import SMOTE
 
@@ -36,10 +36,10 @@ from torch.autograd import Variable
 
 #%% predict
 
+
 # predict probability
-def PREDICT_PROBA(model,inputdata, thres=False):
+def PREDICT_PROBA(model, inputdata, thres=False):
     with torch.no_grad():
-        inputdata = Normalizing(inputdata)
         inputdata = torch.tensor(inputdata, dtype=torch.float32)
         inputdata = inputdata.reshape(-1,1,hyperparameters['duration'])
         inputdata = inputdata.to(torch.device('cpu'))
@@ -47,11 +47,26 @@ def PREDICT_PROBA(model,inputdata, thres=False):
         label = torch.argmax(prediction).item()
         prob = prediction[:,1]
         prob = prob.detach().cpu().numpy()
-        prob = prob[0]
     if thres :
         return label
     else :
         return prob
+
+
+# main prediction seccsion
+def QueryPredict(model):
+
+    duration = hyperparameters['duration']
+    filepath = os.path.join(hyperparameters['path'], 'spike2data', 'record', 'ele_data.txt')
+
+    inputdata = pd.read_table(filepath, header=0)
+    inputdata.columns = ['time','channel']
+    inputdata.fillna(inputdata['channel'].mean(),inplace=True)
+    inputdata = np.array(inputdata['channel'])
+    inputdata = inputdata[:duration].astype(np.float32)
+
+    seizure_proba = PREDICT_PROBA(model,inputdata)[0]
+    return inputdata, seizure_proba
 
 
 # EMA smoothing
@@ -132,11 +147,6 @@ def Splitting(data):
     return train_data, test_data
 
 
-def Normalizing(data):
-    data = preprocessing.StandardScaler().fit_transform(data)
-    return data
-
-
 def Concating(train_normal,test_normal,train_seizure,test_seizure):
     train_data = np.concatenate((train_normal, train_seizure))
     train_label = np.concatenate((np.array([0]*len(train_normal[:,0])), np.array([1]*len(train_seizure[:,0]))))
@@ -162,11 +172,6 @@ def ProcessData(raw_normal, raw_seizure):
 
     del normal,seizure
     gc.collect()
-
-    train_normal = Normalizing(train_normal)
-    test_normal = Normalizing(test_normal)
-    train_seizure = Normalizing(train_seizure)
-    test_seizure = Normalizing(test_seizure)
 
     train_data, train_label, test_data, test_label = Concating(train_normal,test_normal,train_seizure,test_seizure)
 
@@ -265,6 +270,8 @@ class SRSmodel(nn.Module):
                  ):
         super(SRSmodel, self).__init__()
 
+        self.Norm = nn.BatchNorm1d(in_channels)
+
         self.conv_in = nn.Conv1d(1, in_channels, kernel_size=1)
 
         self.inception1 = Inception(in_channels=in_channels)
@@ -274,11 +281,15 @@ class SRSmodel(nn.Module):
 
         self.conv_out = nn.Conv1d(in_channels, 1, kernel_size=1)
 
+        self.dropout = nn.Dropout(0.5)
+
         self.fc = nn.Linear(int(hyperparameters['duration']),2)
 
     def forward(self, x):
 
         net = self.conv_in(x) # [batch_size, in_channels, duration]
+        net = self.Norm(net)
+
         net = self.inception1(net) # [batch_size, in_channels, duration]
         net = self.inception2(net) # [batch_size, in_channels, duration]
         net = self.inception3(net) # [batch_size, in_channels, duration]
@@ -286,6 +297,7 @@ class SRSmodel(nn.Module):
         net = self.conv_out(net) # [batch_size, 1, duration]
 
         net = torch.flatten(net, 1) # [batch_size, duration]
+        net = self.dropout(net)
         net = self.fc(net) # [batch_size, 2]
         net = F.softmax(net, dim=1)
 
@@ -439,7 +451,7 @@ def LoadModel():
     model = SRSmodel()
     model.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
     model.eval()
-    print('\n model on cpu for subject {} successfully loaded'.format(sbj))
+    #model.to(torch.device('cpu'))
     return model
 
 
@@ -471,7 +483,6 @@ def TestModel():
     files.sort()
 
     model = LoadModel()
-    model.to(torch.device("cpu"))
 
     for filename in files:
 
@@ -482,7 +493,6 @@ def TestModel():
         states = []
 
         filepath = os.path.join(hyperparameters['path'], 'TrainData', hyperparameters['subject'], 'test', filename)
-
         inputdata = Read(filepath)
         prediction = PREDICT_PROBA(model,inputdata)
 

@@ -5,7 +5,6 @@ Created on Mon Oct 26 13:16:49 2020
 @author: Hilbert Huang Hitomi
 """
 
-import torch
 import time
 import WatchDog
 import DataIO
@@ -21,7 +20,6 @@ if __name__== '__main__':
 
     # load model
     model = Model.LoadModel()
-    model.to(torch.device('cpu'))
 
     # initialization
     ema_proba = 0
@@ -32,7 +30,7 @@ if __name__== '__main__':
     inper_count = 0
 
     print('\n------------------------------------------------------')
-    print('MODEL START')
+    print('MODEL START for subject {}'.format(hyperparameters['subject']))
     print('------------------------------------------------------\n')
 
     # call to read and predict txt data
@@ -46,7 +44,7 @@ if __name__== '__main__':
             runtime += 1
 
             WatchDog.Watching(hDir)
-            inputdata, seizure_proba = DataIO.QueryPredict(model)
+            inputdata, seizure_proba = Model.QueryPredict(model)
             ema_proba = Model.EmaPredict(ema_proba, seizure_proba)
             print(time.strftime("%Y-%m-%d %H:%M:%S - ", time.localtime()) + '{:.2%}'.format(ema_proba) + '\n')
 
@@ -56,3 +54,5 @@ if __name__== '__main__':
 
             flag, state = Model.StartFlag(flag, ema_proba)
             inper_count = INPERcontrol.IFfire(state, inper_count)
+
+            time.sleep(1.0)

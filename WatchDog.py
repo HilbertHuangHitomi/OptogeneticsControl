@@ -33,8 +33,9 @@ def Watching(hDir):
         hDir,
         512,
         True,
+        win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
         win32con.FILE_NOTIFY_CHANGE_ATTRIBUTES |
-        win32con.FILE_NOTIFY_CHANGE_SIZE |
-        win32con.FILE_NOTIFY_CHANGE_LAST_WRITE,
+        win32con.FILE_NOTIFY_CHANGE_ATTRIBUTES |
+        win32con.FILE_NOTIFY_CHANGE_SIZE,
         None,
         None)

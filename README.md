@@ -172,6 +172,9 @@ made by Yicong Huang, SCUT.
 - adjust parameters.
 - fix bugs in the loss function.
 
+### 2021.04.09 update
+- adjust parameters.
+- delete normalization to prevent 0 input.
+
 ## immediate exsisting issues
-- inverse results online.
 - speed of reading and processing large scale data.
