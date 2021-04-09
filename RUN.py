@@ -50,7 +50,7 @@ if __name__== '__main__':
 
             DataIO.Report(ema_proba)
             DataIO.events(state)
-            DataIO.SaveTrace(inputdata[0], floder)
+            DataIO.SaveTrace(inputdata, floder)
 
             flag, state = Model.StartFlag(flag, ema_proba)
             inper_count = INPERcontrol.IFfire(state, inper_count)
