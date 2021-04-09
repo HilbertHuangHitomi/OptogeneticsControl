@@ -5,6 +5,8 @@ python RUN.py
 python ~/Projects/OptogeneticsControl/Model.py
 
 
+pip install -r H:\Projects\OptogeneticsControl\requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+
 git init
 git add .
 git commit -m "new"

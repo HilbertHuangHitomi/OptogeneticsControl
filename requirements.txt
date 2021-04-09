@@ -1,4 +1,3 @@
-pytorch
 numpy
 pandas
 sklearn
@@ -8,5 +7,6 @@ pywt
 tqdm
 prettytable
 matplotlib
-serial
+pyserial
 simplejson
+pywin32

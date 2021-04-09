@@ -173,5 +173,5 @@ made by Yicong Huang, SCUT.
 - fix bugs in the loss function.
 
 ## immediate exsisting issues
-- bad test performance.
+- inverse results online.
 - speed of reading and processing large scale data.

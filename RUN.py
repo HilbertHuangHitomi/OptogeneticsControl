@@ -5,7 +5,7 @@ Created on Mon Oct 26 13:16:49 2020
 @author: Hilbert Huang Hitomi
 """
 
-
+import torch
 import time
 import WatchDog
 import DataIO
@@ -21,6 +21,7 @@ if __name__== '__main__':
 
     # load model
     model = Model.LoadModel()
+    model.to(torch.device('cpu'))
 
     # initialization
     ema_proba = 0
@@ -51,7 +52,7 @@ if __name__== '__main__':
 
             DataIO.Report(ema_proba)
             DataIO.events(state)
-            DataIO.SaveTrace(inputdata, floder)
+            DataIO.SaveTrace(inputdata[0], floder)
 
             flag, state = Model.StartFlag(flag, ema_proba)
             inper_count = INPERcontrol.IFfire(state, inper_count)

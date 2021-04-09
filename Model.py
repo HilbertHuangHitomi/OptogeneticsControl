@@ -36,19 +36,18 @@ from torch.autograd import Variable
 
 #%% predict
 
-
 # predict probability
-def PREDICT_PROBA(model, inputdata, thres=False):
+def PREDICT_PROBA(model,inputdata, thres=False):
     with torch.no_grad():
         inputdata = Normalizing(inputdata)
         inputdata = torch.tensor(inputdata, dtype=torch.float32)
         inputdata = inputdata.reshape(-1,1,hyperparameters['duration'])
-        inputdata = inputdata.to(torch.device(hyperparameters['working_device']))
-        model.to(torch.device(hyperparameters['working_device']))
+        inputdata = inputdata.to(torch.device('cpu'))
         prediction = model(inputdata)
         label = torch.argmax(prediction).item()
-        prob = prediction[0,1]
-        prob = prediction.detach().cpu().numpy()
+        prob = prediction[:,1]
+        prob = prob.detach().cpu().numpy()
+        prob = prob[0]
     if thres :
         return label
     else :
@@ -429,7 +428,7 @@ def run(model, device, train_loader, test_loader):
 def SaveModel(model):
     sbj = hyperparameters['subject']
     path = os.path.join(hyperparameters['path'], 'model', sbj, 'model.weights')
-    model.to(torch.device(hyperparameters['working_device']))
+    model.to(torch.device('cpu'))
     torch.save(model.state_dict(), path)
     print('\n model for subject {} completed and saved'.format(sbj))
 
@@ -438,9 +437,9 @@ def LoadModel():
     sbj = hyperparameters['subject']
     path = os.path.join(hyperparameters['path'], 'model', sbj, 'model.weights')
     model = SRSmodel()
-    model.load_state_dict(torch.load(path, map_location=torch.device(hyperparameters['working_device'])))
+    model.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
     model.eval()
-    print('\n model on {} for subject {} successfully loaded'.format(hyperparameters['working_device'],sbj))
+    print('\n model on cpu for subject {} successfully loaded'.format(sbj))
     return model
 
 
@@ -449,25 +448,13 @@ def LoadModel():
 
 def TestModel():
 
-    def Read(filename):
+    def Read(filepath):
         duration = hyperparameters['duration']
-        path = os.path.join(hyperparameters['path'], 'TrainData', hyperparameters['subject'], 'test', filename)
-        inputdata = np.loadtxt(path).astype(np.float32)
+        inputdata = np.loadtxt(filepath).astype(np.float32)
         sample_size = len(inputdata)//duration
         inputdata = inputdata[:sample_size*duration]
         inputdata = inputdata.reshape(sample_size,duration)
         return inputdata
-
-    def predict(model,inputdata):
-        with torch.no_grad():
-            inputdata = Normalizing(inputdata)
-            inputdata = torch.tensor(inputdata, dtype=torch.float32)
-            inputdata = inputdata.reshape(-1,1,hyperparameters['duration'])
-            inputdata = inputdata.to(torch.device("cpu"))
-            prediction = model(inputdata)
-            prediction = prediction[:,1]
-            prediction = prediction.detach().cpu().numpy()
-        return prediction
 
     def Plot(ema_prediction):
         plt.figure(1, figsize=(64, 2))
@@ -494,8 +481,10 @@ def TestModel():
         ema_prediction = []
         states = []
 
-        inputdata = Read(filename)
-        prediction = predict(model,inputdata)
+        filepath = os.path.join(hyperparameters['path'], 'TrainData', hyperparameters['subject'], 'test', filename)
+
+        inputdata = Read(filepath)
+        prediction = PREDICT_PROBA(model,inputdata)
 
         for pred in prediction :
             ema_proba = EmaPredict(ema_proba, pred)
@@ -545,4 +534,3 @@ if __name__== '__main__':
     main()
 
     TestModel()
-
