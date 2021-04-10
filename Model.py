@@ -43,7 +43,11 @@ def PREDICT_PROBA(model, inputdata, thres=False):
         inputdata = torch.tensor(inputdata, dtype=torch.float32)
         inputdata = inputdata.reshape(-1,1,hyperparameters['duration'])
         inputdata = inputdata.to(torch.device('cpu'))
+
         prediction = model(inputdata)
+        del inputdata
+        gc.collect()
+
         label = torch.argmax(prediction).item()
         prob = prediction[:,1]
         prob = prob.detach().cpu().numpy()
@@ -238,6 +242,7 @@ class Inception(nn.Module):
     def forward(self, x):
 
         branch1 = self.branch1_0(x)
+        branch1 = F.leaky_relu(branch1)
 
         branch2 = self.branch2_0(x)
         branch2 = self.branch2_1(branch2)
@@ -270,7 +275,7 @@ class SRSmodel(nn.Module):
                  ):
         super(SRSmodel, self).__init__()
 
-        self.Norm = nn.BatchNorm1d(in_channels)
+        self.Norm = nn.BatchNorm1d(in_channels, affine=False)
 
         self.conv_in = nn.Conv1d(1, in_channels, kernel_size=1)
 
@@ -280,8 +285,6 @@ class SRSmodel(nn.Module):
         self.inception4 = Inception(in_channels=in_channels)
 
         self.conv_out = nn.Conv1d(in_channels, 1, kernel_size=1)
-
-        self.dropout = nn.Dropout(0.5)
 
         self.fc = nn.Linear(int(hyperparameters['duration']),2)
 
@@ -297,7 +300,6 @@ class SRSmodel(nn.Module):
         net = self.conv_out(net) # [batch_size, 1, duration]
 
         net = torch.flatten(net, 1) # [batch_size, duration]
-        net = self.dropout(net)
         net = self.fc(net) # [batch_size, 2]
         net = F.softmax(net, dim=1)
 
@@ -536,7 +538,7 @@ def main():
         SaveModel(model)
 
 
-#%% test traces
+#%% run & test
 
 
 if __name__== '__main__':

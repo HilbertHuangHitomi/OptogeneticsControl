@@ -17,18 +17,18 @@ hyperparameters = {
     'train_new_model':  True,
     'split':            [7,1],
     'duration':         2048,
-    'batch_size':       128,
+    'batch_size':       64,
     'lr':               1e-3,
-    'epochs':           32,
-    'focal_gamma':      4,
-    'focal_alpha':      0.1,
-    'gamma':            5e-1,
+    'epochs':           16,
+    'focal_gamma':      2,
+    'focal_alpha':      0.5,
+    'gamma':            1e-1,
     'weight_decay':     1e-2,
     'working_device':   'cpu',
 
     'sampling_rate':    500,
     'record_days':      5,
-    'waiting_times':    [0.50,0.50],
+    'waiting_times':    [0.75],
     'ema':              0.
 
     }

@@ -176,5 +176,8 @@ made by Yicong Huang, SCUT.
 - adjust parameters.
 - delete normalization to prevent 0 input.
 
+### 2021.04.10 update
+- delete inputdada after prediction to save memory.
+
 ## immediate exsisting issues
 - speed of reading and processing large scale data.
